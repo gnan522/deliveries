@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deliveries</title>
+<meta name="theme-color" content="#1f4d3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Deliveries">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1c1b19; --muted:#6f6b63; --line:#e6e2d9;
+    --accent:#1f4d3a; --accent-soft:#e3eee8; --blue:#2856a3; --blue-soft:#e6edf8;
+    --red:#b3261e; --red-soft:#fbe9e7; --amber:#8a5a00; --amber-soft:#fdf1d6; --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#141412; --card:#1e1e1b; --ink:#f1efe9; --muted:#a19c92; --line:#33322d;
+      --accent:#7cc4a0; --accent-soft:#1f3329; --blue:#8fb2ec; --blue-soft:#1d2840;
+      --red:#f19b93; --red-soft:#3a1f1c; --amber:#e8c06a; --amber-soft:#3a2f17; }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg)}
+  body{margin:0;color:var(--ink);font:16px/1.45 Inter,system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .wrap{max-width:720px;margin:0 auto;padding:18px 16px 70px}
+  [hidden]{display:none !important}
+
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:28px;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--muted);font-size:14px}
+  .link{background:none;border:0;color:var(--muted);font-size:14px;padding:6px 0;text-decoration:underline}
+
+  .progress{margin:16px 0 6px;height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+  .progress > div{height:100%;background:var(--accent);width:0;transition:width .4s}
+  .progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:13px}
+  .banner{margin:12px 0;padding:10px 14px;border-radius:10px;background:var(--amber-soft);color:var(--amber);font-size:14px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
+  .next{margin:18px 0;padding:18px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .next .what{font-size:21px;font-weight:600;margin:6px 0 2px;line-height:1.25}
+  .next .who{color:var(--muted)}
+  .pill{margin-top:10px;display:inline-block;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:13px}
+  .pill.late{background:var(--red-soft);color:var(--red)}
+  .pill.soon{background:var(--amber-soft);color:var(--amber)}
+  .next .note{margin-top:10px;font-size:14px;color:var(--amber)}
+  .actions{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+  button{font:inherit;cursor:pointer;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:12px 14px;font-weight:600}
+  button.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+  button:disabled{opacity:.45}
+
+  .toolbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 8px;margin-top:6px}
+  .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:none;padding:7px 13px;border-radius:99px;font-size:14px;font-weight:500;border:1px solid var(--line);background:transparent}
+  .chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  input{font:inherit;font-size:16px;width:100%;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+  .search{margin-top:8px}
+
+  .group{margin-top:16px}
+  .group h2{font-size:15px;font-weight:600;margin:0 0 6px;display:flex;justify-content:space-between;gap:8px}
+  .group h2 span{color:var(--muted);font-weight:500;font-size:13px;text-align:right}
+  .list{overflow:hidden}
+  .row{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-top:1px solid var(--line)}
+  .row:first-child{border-top:0}
+  .row.done .title{text-decoration:line-through;color:var(--muted)}
+  .check{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid var(--muted);background:transparent;padding:0;display:grid;place-items:center}
+  .check.on{background:var(--accent);border-color:var(--accent)}
+  .check svg{width:17px;height:17px;stroke:var(--bg);opacity:0}
+  .check.on svg{opacity:1}
+  .body{flex:1;min-width:0}
+  .title{font-weight:500}
+  .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:12.5px;color:var(--muted);align-items:center}
+  .tag{padding:2px 8px;border-radius:99px;background:var(--bg);border:1px solid var(--line)}
+  .tag.late{background:var(--red-soft);color:var(--red);border-color:transparent;font-weight:600}
+  .tag.soon{background:var(--amber-soft);color:var(--amber);border-color:transparent;font-weight:600}
+  .tag.editing{background:var(--blue-soft);color:var(--blue);border-color:transparent;font-weight:600}
+  .tag.done{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+  .tag.money{background:var(--amber-soft);color:var(--amber);border-color:transparent}
+  .edit-btn{flex:none;font-size:13px;padding:7px 10px;border-radius:10px}
+  .edit-btn.on{background:var(--blue-soft);color:var(--blue);border-color:transparent}
+  .empty{padding:30px;text-align:center;color:var(--muted)}
+
+  .signin{max-width:400px;margin:12vh auto 0;padding:24px}
+  .signin img{width:72px;height:72px;border-radius:18px;display:block;margin-bottom:16px}
+  .signin label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
+  .signin button{width:100%;margin-top:18px}
+  .err{color:var(--red);font-size:14px;margin-top:12px;min-height:1em}
+  .install{margin-top:22px;font-size:13.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- Sign-in screen -->
+<div id="signinView" class="signin" hidden>
+  <img src="icons/icon-192.png" alt="">
+  <h1>Deliveries</h1>
+  <div class="sub">Droppsz Medias · 2026 weddings</div>
+  <form id="signinForm">
+    <label for="name">What's your first name?</label>
+    <input id="name" autocomplete="given-name" required>
+    <button class="primary" type="submit">Open the list</button>
+    <div class="sub" style="margin-top:12px">Your name shows next to the things you tick off, so you both know who did what.</div>
+  </form>
+</div>
+
+<!-- Setup-missing screen -->
+<div id="setupView" class="signin" hidden>
+  <h1>Almost there</h1>
+  <p class="sub">The app isn't connected to its database yet: config.js still needs the Firebase values.</p>
+</div>
+
+<!-- Main app -->
+<div id="appView" class="wrap" hidden>
+  <div class="top">
+    <div>
+      <h1>Deliveries</h1>
+      <div class="sub">One out every 3 days, at the latest</div>
+    </div>
+    
+  </div>
+
+  <div class="progress"><div id="bar"></div></div>
+  <div class="progress-label"><span id="progressText">Loading…</span><span id="finishText"></span></div>
+  <div class="banner" id="banner" hidden></div>
+
+  <section class="card next">
+    <div class="eyebrow">Up next</div>
+    <div class="what" id="nextWhat">Loading the list…</div>
+    <div class="who" id="nextWho"></div>
+    <div class="pill" id="nextWhen" hidden></div>
+    <div class="note" id="nextNote"></div>
+    <div class="actions" id="nextActions" hidden>
+      <button id="nextEdit">I'm editing this</button>
+      <button class="primary" id="nextDone">Mark delivered</button>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="chips" id="filters">
+      <button class="chip on" data-f="open">Not done</button>
+      <button class="chip" data-f="editing">Being edited</button>
+      <button class="chip" data-f="done">Delivered</button>
+      <button class="chip" data-f="all">All</button>
+    </div>
+    <input class="search" id="search" placeholder="Search a client…" autocomplete="off">
+  </div>
+
+  <div id="groups"></div>
+</div>
+
+<script type="module" src="app.js"></script>
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "Droppsz Deliveries",
+  "short_name": "Deliveries",
+  "description": "Shared 2026 wedding delivery tracker for Droppsz Medias",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f4ef",
+  "theme_color": "#1f4d3a",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
